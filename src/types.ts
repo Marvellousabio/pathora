@@ -32,6 +32,7 @@ export interface Career {
   description: string;
   required_skills: string[];
   tags: string[]; // Used for matching with user traits
+  negative_tags?: string[]; // Traits that conflict with this career
   growth_outlook: 'Low' | 'Medium' | 'High';
 }
 

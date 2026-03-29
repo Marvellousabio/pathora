@@ -13,9 +13,14 @@ export const generateCareerInsight = async (profile: UserProfile, career: Career
 
     Explain why this career is a good fit for the user based on their traits, interests, and skills.
     Crucially, incorporate their current career background (${profile.current_career}), what they have already learned (${profile.learned_skills}), and their core passions (${profile.passions}) into your reasoning.
-    Highlight potential strengths they bring and any areas they might need to develop.
-    Keep the tone motivational, professional, and human-like.
-    Avoid generic advice. Be specific to the user's profile and the career's requirements.
+    
+    Formatting Guidelines:
+    - Use clear, conversational language.
+    - Break the text into 2-3 short, readable paragraphs.
+    - Use bullet points if listing specific strengths or growth areas.
+    - Avoid robotic phrases like "Based on your profile..." or "The data shows...".
+    - Speak directly to the user (use "You" and "Your").
+    - Ensure the tone is warm, professional, and genuinely insightful.
   `;
 
   const response = await ai.models.generateContent({
@@ -144,7 +149,14 @@ export const getCoachResponse = async (history: ChatMessage[], profile: UserProf
 
     As the Pathora AI Career Coach, answer the user's latest message.
     Guide them through their career decisions, explain recommendations, or help them refine their goals.
-    Be encouraging, insightful, and practical.
+    
+    Communication Style:
+    - Be encouraging, insightful, and practical.
+    - Use a friendly, conversational tone.
+    - If the user is overwhelmed, provide a clear next step.
+    - Reference their specific profile (${JSON.stringify(profile)}) and recommendations (${JSON.stringify(recommendations)}) to make the advice concrete.
+    - Use Markdown for formatting (bold for emphasis, lists for steps).
+    - Keep responses concise but meaningful.
   `;
 
   const response = await ai.models.generateContent({

@@ -47,22 +47,63 @@ async function startServer() {
   app.post("/api/recommendations", (req, res) => {
     const { profile } = req.body;
     
-    // Matching Algorithm
-    const userTraits = [
-      ...profile.interests,
-      ...profile.personality_traits,
-      ...profile.skills,
-      ...profile.preferences
-    ];
-
     const recommendations: Recommendation[] = careers.map((career) => {
-      const matchCount = career.tags.filter(tag => userTraits.includes(tag)).length;
-      const score = (matchCount / career.tags.length) * 100;
+      let score = 0;
+      let maxPossibleScore = 0;
+
+      // Define weights for different categories
+      const weights = {
+        personality: 1.5,
+        skills: 1.2,
+        interests: 1.0,
+        preferences: 0.8
+      };
+
+      // Calculate positive matches with weights
+      profile.personality_traits.forEach((trait: string) => {
+        maxPossibleScore += weights.personality;
+        if (career.tags.includes(trait)) score += weights.personality;
+      });
+
+      profile.skills.forEach((trait: string) => {
+        maxPossibleScore += weights.skills;
+        if (career.tags.includes(trait)) score += weights.skills;
+      });
+
+      profile.interests.forEach((trait: string) => {
+        maxPossibleScore += weights.interests;
+        if (career.tags.includes(trait)) score += weights.interests;
+      });
+
+      profile.preferences.forEach((trait: string) => {
+        maxPossibleScore += weights.preferences;
+        if (career.tags.includes(trait)) score += weights.preferences;
+      });
+
+      // Handle negative matches (conflicts)
+      if (career.negative_tags) {
+        const userTraits = [
+          ...profile.personality_traits,
+          ...profile.skills,
+          ...profile.interests,
+          ...profile.preferences
+        ];
+
+        career.negative_tags.forEach((negTag) => {
+          if (userTraits.includes(negTag)) {
+            // Subtract a significant penalty for conflicting traits
+            score -= 2.0; 
+          }
+        });
+      }
+
+      // Normalize score to 0-100 range
+      const finalScore = Math.max(0, Math.min(100, (score / (maxPossibleScore || 1)) * 100));
       
       return {
         career,
-        score,
-        insight: "" // Insights are now generated on the frontend
+        score: finalScore,
+        insight: "" 
       };
     });
 

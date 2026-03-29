@@ -18,6 +18,7 @@ import {
   Send
 } from 'lucide-react';
 import { Question, UserProfile, Recommendation, CareerRoadmap, SkillGap, ChatMessage } from './types';
+import Markdown from 'react-markdown';
 
 import { generateCareerInsight, generateRoadmap, analyzeSkillGap, getCoachResponse } from './services/ai';
 
@@ -376,9 +377,9 @@ export default function App() {
                       </div>
 
                       {rec.insight && (
-                        <div className="bg-[#FDFCFB] border border-gray-50 rounded-2xl p-6 mb-8 italic text-gray-600 text-sm leading-relaxed relative">
+                        <div className="bg-[#FDFCFB] border border-gray-50 rounded-2xl p-6 mb-8 text-gray-600 text-sm leading-relaxed relative markdown-body">
                           <Sparkles className="absolute -top-3 -left-3 w-6 h-6 text-[#F27D26] bg-white p-1 rounded-full border border-gray-100" />
-                          "{rec.insight}"
+                          <Markdown>{rec.insight}</Markdown>
                         </div>
                       )}
 
@@ -589,12 +590,12 @@ export default function App() {
                 )}
                 {chatHistory.map((msg, i) => (
                   <div key={i} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-                    <div className={`max-w-[80%] p-5 rounded-3xl text-sm leading-relaxed ${
+                    <div className={`max-w-[80%] p-5 rounded-3xl text-sm leading-relaxed markdown-body ${
                       msg.role === 'user' 
                         ? 'bg-[#F27D26] text-white rounded-tr-none' 
                         : 'bg-gray-100 text-gray-800 rounded-tl-none'
                     }`}>
-                      {msg.text}
+                      <Markdown>{msg.text}</Markdown>
                     </div>
                   </div>
                 ))}
